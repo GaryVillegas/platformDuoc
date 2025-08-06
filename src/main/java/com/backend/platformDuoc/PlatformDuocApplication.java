@@ -16,6 +16,7 @@ public class PlatformDuocApplication {
 		System.setProperty("MYSQL_DATABASE", dotenv.get("MYSQL_DATABASE"));
 		System.setProperty("MYSQL_USERNAME", dotenv.get("MYSQL_USERNAME"));
 		System.setProperty("MYSQL_PASSWORD", dotenv.get("MYSQL_PASSWORD"));
+		System.setProperty("SECRET_JWT", dotenv.get("SECRET_JWT"));
 
 		SpringApplication.run(PlatformDuocApplication.class, args);
 	}

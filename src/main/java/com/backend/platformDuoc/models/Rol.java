@@ -19,9 +19,9 @@ public class Rol {
     private Integer id;
 
     @Column(nullable = false, length = 50)
-    private String nombreRol;
+    private String roleName;
 
-    @OneToMany(mappedBy = "rol")
+    @OneToMany(mappedBy = "role")
     @JsonManagedReference
     private List<User> users;
 

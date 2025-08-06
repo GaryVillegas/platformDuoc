@@ -41,8 +41,8 @@ public class User{
     private String lastname;
 
     @ManyToOne
-    @JoinColumn(name = "rol_id", nullable = false)
+    @JoinColumn(name = "role_id", nullable = false)
     @JsonBackReference
-    private Rol rol;
+    private Rol role;
 
 }

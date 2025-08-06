@@ -1,6 +1,7 @@
 package com.backend.platformDuoc.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.platformDuoc.models.Rol;
 import com.backend.platformDuoc.models.User;
 import com.backend.platformDuoc.repository.UserRepository;
 import com.backend.platformDuoc.services.JwtUserDetailsService;
+import com.backend.platformDuoc.services.RoleService;
 import com.backend.platformDuoc.utils.JwtTokenUtil;
 
 import java.util.HashMap;
@@ -31,6 +34,10 @@ public class AuthenticationController {
     
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleService roleService;
+
     protected final Log logger = LogFactory.getLog(getClass());
 
     final UserRepository userRepository;
@@ -89,6 +96,7 @@ public class AuthenticationController {
         String password = userData.get("password");
         String name = userData.get("name");
         String lastname = userData.get("name");
+        String role_id = userData.get("role_id");
 
         Map<String, Object> responseMap = new HashMap<>();
         User user = new User();
@@ -97,6 +105,28 @@ public class AuthenticationController {
         user.setPassword(passwordEncoder.encode(password));
         user.setName(name);
         user.setLastname(lastname);
+        if(role_id == null){
+            responseMap.put("error", true);
+            responseMap.put("message", "El campo 'roleId' es obligatorio.");
+            return ResponseEntity.badRequest().body(responseMap);
+        }
+
+        Integer roleId;
+        try {
+        roleId = Integer.parseInt(role_id);
+        } catch (NumberFormatException e) {
+            responseMap.put("error", true);
+            responseMap.put("message", "El 'roleId' debe ser un número válido.");
+            return ResponseEntity.badRequest().body(responseMap);
+        }
+
+        Rol rol = roleService.findById(roleId);
+        if (rol == null) {
+            responseMap.put("error", true);
+            responseMap.put("message", "Rol con ID " + roleId + " no encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMap);
+        }
+        user.setRole(rol);
         userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
