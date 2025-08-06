@@ -59,9 +59,13 @@ public class JwtTokenUtil {
 
     public String generateToken(UserDetails userDetails){
         Map<String, Object> claims = new HashMap<>();
+        long nowMillis = System.currentTimeMillis();
         return Jwts.builder().setClaims(claims)
         .setSubject(userDetails.getUsername())
-        .setIssuedAt(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)).signWith(key).compact();
+        .setIssuedAt(new Date(nowMillis))
+        .setExpiration(new Date(nowMillis + JWT_TOKEN_VALIDITY * 1000))
+        .signWith(key)
+        .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails){
@@ -77,5 +81,5 @@ public class JwtTokenUtil {
             .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
             .signWith(key)
             .compact();
-    }
+    }    
 }

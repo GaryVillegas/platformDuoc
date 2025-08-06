@@ -22,6 +22,8 @@ import com.backend.platformDuoc.services.JwtUserDetailsService;
 import com.backend.platformDuoc.services.RoleService;
 import com.backend.platformDuoc.utils.JwtTokenUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,6 +138,25 @@ public class AuthenticationController {
         responseMap.put("message", "Account created successfully");
         responseMap.put("token", token);
         return ResponseEntity.ok(responseMap);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request){
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer")){
+            String refreshToken = authorizationHeader.substring(7);
+            String username = jwtTokenUtil.getUsernameFromToken(refreshToken);
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if(jwtTokenUtil.validateToken(refreshToken, userDetails)){
+                String newAccessToken = jwtTokenUtil.generateRefreshToken(userDetails);
+                return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token inválido o expirado");
     }
 
 }
