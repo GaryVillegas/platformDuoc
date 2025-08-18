@@ -1,6 +1,7 @@
 package com.backend.platformDuoc.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,7 +44,15 @@ public class User{
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Rol role;
+
+    @JsonProperty("role_id")
+    public Integer getRoleId(){
+        return role != null ?  role.getId() : null;
+    }
+
+    @Column(nullable = true, length = 255)
+    private String avatar;
 
 }

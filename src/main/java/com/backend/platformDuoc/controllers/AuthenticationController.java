@@ -66,26 +66,26 @@ public class AuthenticationController {
                 logger.info("Logged In");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 String token = jwtTokenUtil.generateToken(userDetails);
-                responseMap.put("error", false);
-                responseMap.put("message", "Invalid Credentials.");
+                responseMap.put("success", true);
+                responseMap.put("message", "Logged in successfully.");
                 responseMap.put("token", token);
                 return ResponseEntity.ok(responseMap);
             } else {
-                responseMap.put("error", true);
+                responseMap.put("success", false);
                 responseMap.put("message", "Invalid Credentials");
                 return ResponseEntity.status(401).body(responseMap);
             }
         } catch (DisabledException e){
             e.printStackTrace();
-            responseMap.put("error", true);
+            responseMap.put("success", false);
             responseMap.put("message", "User is disabled.");
             return ResponseEntity.status(500).body(responseMap);
         } catch(BadCredentialsException e){
-            responseMap.put("error", true);
+            responseMap.put("success", false);
             responseMap.put("message", "Invalid Credentials.");
             return ResponseEntity.status(401).body(responseMap);
         } catch (Exception e){
-            responseMap.put("erorr", true);
+            responseMap.put("success", false);
             responseMap.put("message", "Something went wrong.");
             return ResponseEntity.status(500).body(responseMap);
         }
