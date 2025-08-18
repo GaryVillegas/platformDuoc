@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.backend.platformDuoc.dto.UserDTO;
 import com.backend.platformDuoc.models.User;
 import com.backend.platformDuoc.repository.UserRepository;
 
@@ -28,12 +29,12 @@ public class UserService{
     }
 
     //Devuelve usuario con rol especifico
-    public List<User> getStudentRole(){
-        return userRepository.findByRole_id(4);
+    public List<UserDTO> getStudentRole(){
+        return userRepository.findUserByRoleId(4);
     }
 
-    public List<User> getExecutiveRole(){
-        return userRepository.findByRole_id(3);
+    public List<UserDTO> getExecutiveRole(){
+        return userRepository.findUserByRoleId(3);
     }
 
 }

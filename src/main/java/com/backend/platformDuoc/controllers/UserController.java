@@ -2,7 +2,7 @@ package com.backend.platformDuoc.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +23,7 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    @PostMapping("/users")
+    @GetMapping("/users")
     public ResponseEntity<?> listUser(){
         if(userService.findAllUser().isEmpty()){
             return ResponseEntity.status(404).body("No se encontraron usuarios.");
@@ -32,7 +32,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.findAllUser());
     }
 
-    @PostMapping("/student")
+    @GetMapping("/student")
     public ResponseEntity<?> listStudent(){
         if(userService.getStudentRole().isEmpty()){
             return ResponseEntity.status(404).body("No se encontraron usuarios estudiantes");
